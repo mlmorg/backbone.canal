@@ -44,7 +44,7 @@ var Router = Backbone.Router.extend({
 
 Any method that exists on a router can be called using `router.go()`, passing
 the name of the method as the first argument. If the method has an associated 
-URL route, the browser URL will change accordingly. Pass any route parameters
+route, the browser URL will change accordingly. Pass any route parameters
 or query parameters in a hash as the second argument and the parameters will be
 parsed and put in their respective places in the URL. For instance, we could
 navigate to the example route above, like so:
@@ -54,8 +54,7 @@ router.go('contact', { id: '123', action: 'edit' });
 ```
 
 The `router.go()` method acts similarly to `router.navigate()` and any options
-applicable to it may also be passed in a hash as the third argument to the
-`go` method:
+applicable to it may also be passed in a hash as the third argument:
 
 ``` javascript
 router.go('contact', { id: '123' }, { replace: true });
