@@ -1,4 +1,4 @@
-# backbone.canal
+# Backbone.Canal
 
 Backbone.Router add-on for named routes, query parameters, and other helpful tools
 
@@ -18,9 +18,9 @@ Include the distribution file immediately following Backbone:
 
 ### Route parameters
 
-Any named parameters in the route are sent within a hash as the first argument
+Named parameters in the route are sent within a hash as the first argument
 to the associated route method. For instance, in the following example the `id`
-route parameter is accessed from the `params` hash.
+route parameter is accessed from the `params` hash:
 
 ``` javascript
 var Router = Backbone.Router.extend({
@@ -38,16 +38,11 @@ var Router = Backbone.Router.extend({
 
 ### Query parameters
 
-Any route navigated to with query parameters (i.e. `?foo=bar`) is called with
-a hash of those values as its second argument. Using the last example, we could
-navigate to the same route, like so:
-
-``` javascript
-router.navigate('contact/123?action=edit', true);
-```
-The `contact` method would then receive two arguments, a `params` hash
-(containing the named/splat parameters) and a `query` hash (containing the 
-query parameters sent alongside the request):
+Any query parameters appended to a URL are hashed and included as the second
+argument to the associated route method. Any defined routes can be called with
+query paramters irrespective of if they have a trailing `splat` or not. For
+example, the same route as above could be navigated to with `?action=edit`
+allowing the `action` parameter to be accessed from the `query` hash:
 
 ``` javascript
 var Router = Backbone.Router.extend({
@@ -62,6 +57,19 @@ var Router = Backbone.Router.extend({
   }
 
 });
+```
+
+### App Routing
+
+Any method that exists on a router can be called using `router.go()`, passing
+the name of the method as the first argument. If the method has an associated 
+URL route, the browser URL will change accordingly. Pass any route parameters
+or query paramters in a hash as the second argument to the method. The
+parameters will be parsed and placed accordingly. Using the example above, we
+could navigate to it, like so:
+
+``` javascript
+router.go('contact', { id: '123', action: 'edit' });
 ```
 
 ## Testing Environment
