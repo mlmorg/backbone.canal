@@ -1,0 +1,19 @@
+{
+  "name": "backbone.canal",
+  "version": "0.1.0",
+  "author": "Matt Morgan (@mlmorg)",
+  "description": "Backbone.Router add-on for named routes, query parameters, and other helpful tools",
+  "homepage": "https://github.com/mlmorg/backbone.canal",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mlmorg/backbone.canal.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-contrib-jshint": "~0.3.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-mocha": "~0.2.3"
+  },
+  "license": "MIT"
+}

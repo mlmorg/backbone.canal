@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Test Suite</title>
+
+    <link rel="stylesheet" href="../components/mocha/mocha.css">
+
+    <!-- vendor files -->
+    <script src="../components/mocha/mocha.js"></script>
+    <script src="../components/sinon/lib/sinon.js"></script>
+    <script src="../components/sinon/lib/sinon/spy.js"></script>
+    <script src="../components/chai/chai.js"></script>
+    <script src="../components/jquery/jquery.js"></script>
+    <script src="../components/underscore/underscore.js"></script>
+    <script src="../components/backbone/backbone.js"></script>
+
+    <!-- js files -->
+    <script src="../lib/backbone.canal.js"></script>
+
+    <!-- setup mocha -->
+    <script>
+      mocha.setup({ ui: 'bdd', globals: ['jQuery'] });
+    </script>
+
+    <!-- test suite -->
+    <script src="backbone.canal.spec.js"></script>
+
+    <!-- run mocha -->
+    <script>
+      var expect = chai.expect;
+      var should = chai.should();
+      var assert = chai.assert;
+
+      if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+        $(function () { mocha.run(); });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>
