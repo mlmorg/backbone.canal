@@ -54,10 +54,12 @@ router.go('contact', { id: '123', action: 'edit' });
 ```
 
 The `router.go()` method acts similarly to `router.navigate()` and any options
-applicable to it may also be passed in a hash as the third argument:
+applicable to it may also be passed in a hash as the third argument. For
+example, we could call the `contact` method and update its URL but NOT create
+an entry in the browser's history with:
 
 ``` javascript
-router.go('contact', { id: '123' }, { replace: true });
+router.go('contact', { id: '123', action: 'edit' }, { replace: true });
 ```
 
 ## Testing Environment
