@@ -62,6 +62,13 @@ an entry in the browser's history with:
 router.go('contact', { id: '123', action: 'edit' }, { replace: true });
 ```
 
+If you would just like to get the URL of a named route, simply call
+`router.url()`:
+
+``` javascript
+router.url('contact', { id: '123', action: 'edit' });
+```
+
 ## Testing Environment
 
 Install [Node.js](http://nodejs.org/). Make sure you've installed 
