@@ -46,8 +46,8 @@ navigate to the same route, like so:
 router.navigate('contact/123?action=edit', true);
 ```
 The `contact` method would then receive two arguments, a `params` hash
-- containing any named/splat parameters - and a `query` hash - containing any
-query parameters sent alongside the request:
+(containing any named/splat parameters) and a `query` hash (containing any
+query parameters sent alongside the request):
 
 ``` javascript
 contact: function (params, query) {
