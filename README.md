@@ -54,6 +54,7 @@ contact: function (params, query) {
   var id = params.id; // 123
   var action = query.action; // edit
 }
+```
 
 ## Testing Environment
 
