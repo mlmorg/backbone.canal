@@ -1,27 +1,20 @@
 describe('backbone.canal.js', function () {
 
-  var Router, router, navigate;
-  var query = { q: 'joe' };
+  var router;
+  var Router = Backbone.Router.extend({
+    routes: {
+      'search/:type': 'search'
+    },
+    search: sinon.spy()
+  });
 
   before(function () {
-    Router = Backbone.Router.extend({
-      routes: {
-        'search/:type': 'search'
-      },
-      search: sinon.spy()
-    });
-
     router = new Router();
-    navigate = sinon.spy(router, 'navigate');
-
-    try {
-      Backbone.history.start({ pushState: false, silent: true });
-    } catch (e) {}
+    Backbone.history.start({ pushState: false, silent: true });
   });
 
   after(function () {
     router.navigate('');
-    navigate.restore();
   });
 
   describe('when navigating to a route with named params', function () {
@@ -32,8 +25,31 @@ describe('backbone.canal.js', function () {
       router.navigate('search/' + type, true);
     });
 
-    it('should pass key/value pair object as argument', function () {
+    after(function () {
+      router.search.reset();
+    });
+
+    it('should pass hash object with named parameters as first argument', function () {
       expect(router.search.args[0][0]).eql({ type: type });
+    });
+
+  });
+
+  describe('when navigating to a route with query parameters', function () {
+
+    var type = 'name';
+    var query = { q: 'joe' };
+
+    before(function () {
+      router.navigate('search/' + type + '?' + $.param(query), true);
+    });
+
+    after(function () {
+      router.search.reset();
+    });
+
+    it('should pass hash object with query parameters as second argument', function () {
+      expect(router.search.args[0][1]).eql(query);
     });
 
   });

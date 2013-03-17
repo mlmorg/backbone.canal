@@ -17,8 +17,39 @@
   var _extractParameters = Backbone.Router.prototype._extractParameters;
 
   // Useful regex patters
-  var paramIdentifiers = /[\:\*]/g;
-  var paramNames = /[\:\*](\w+)/g;
+  var paramIdentifiersPattern = /^[\:\*]/;
+  var paramNamesPattern = /[\:\*]\w+/g;
+  var queryParamIdentifierPattern = /^\?/;
+  var queryParamsPattern = /\?.*$/;
+  var plusPattern = /\+/g;
+
+  // Backbone.Canal
+  // --------------
+  var Canal = Backbone.Canal = {
+
+    configure: function (options) {
+      return _.extend(this.options, options);
+    },
+
+    options: {
+
+      deparam: function (string) {
+        // Extract the key/value pairs
+        var items = string.replace(plusPattern, ' ').split('&');
+
+        // Build hash
+        var obj = {};
+        _.each(items, function (params) {
+          var param = params.split('=');
+          obj[param[0]] = decodeURIComponent(param[1]);
+        });
+
+        return obj;
+      }
+
+    }
+
+  };
 
   // Extend Backbone.Router
   // ----------------------
@@ -26,8 +57,8 @@
 
     _routeToRegExp: function (route) {
       // Get route parameter names
-      var names = _.map(route.match(paramNames), function (name) {
-        return name.replace(paramIdentifiers, '');
+      var names = _.map(route.match(paramNamesPattern), function (name) {
+        return name.replace(paramIdentifiersPattern, '');
       });
 
       // Create RegExp with original method
@@ -39,15 +70,37 @@
     },
 
     _extractParameters: function (route, fragment) {
-      // Extract named/splat parameters into hash using original method
+      // Extract query parameters
+      var query = {};
+      var queryParams = fragment.match(queryParamsPattern);
+      if (queryParams) {
+        // Remove query parameters from fragment
+        fragment = fragment.replace(queryParams[0], '');
+
+        // Parse query parameters
+        var parsedParams = Canal.options.deparam(
+          queryParams[0].replace(queryParamIdentifierPattern, '')
+        );
+
+        // Add parsed query parameters into query hash
+        _.each(parsedParams, function (value, key) {
+          query[key] = value;
+        });
+      }
+
+      // Extract named/splat parameters
       var params = {};
-      _.each(_extractParameters(route, fragment), function (param, i) {
-        // Set names according to the names array on the regex object
-        params[route.names[i]] = param;
-      });
+      var namedParams = _extractParameters(route, fragment);
+      if (namedParams) {
+        // Add parameters to the params hash
+        _.each(namedParams, function (param, i) {
+          // Set names according to the names array on the regex object
+          params[route.names[i]] = param;
+        });
+      }
 
       // Return arguments array
-      return [params];
+      return [params, query];
     }
 
   });
