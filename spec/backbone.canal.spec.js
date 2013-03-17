@@ -30,7 +30,7 @@ describe('backbone.canal.js', function () {
       router.search.reset();
     });
 
-    it('should pass hash object with named parameters as first argument', function () {
+    it('should pass hash of parameters as first argument', function () {
       expect(router.search.args[0][0]).eql({ type: type });
     });
 
@@ -49,8 +49,8 @@ describe('backbone.canal.js', function () {
       router.search.reset();
     });
 
-    it('should pass hash object with query parameters as second argument', function () {
-      expect(router.search.args[0][1]).eql(query);
+    it('should pass hash of parameters as first argument', function () {
+      expect(router.search.args[0][0]).eql(query);
     });
 
   });

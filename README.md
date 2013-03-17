@@ -22,8 +22,8 @@ Both named route parameters and any passed query paramters are sent in a hash
 as the first argument to the associated route method. Any defined route can be
 called with query parameters irrespective of if they have a trailing `splat`
 or not. For example, using the router defined below and a URL of 
-`contact/123?action=edit`, both the `id` parameter and `action` parameter can
-be accessed from the `params` hash:
+`contact/123?action=edit`, both the `id` route parameter and `action` query 
+parameter can be accessed from the `params` hash:
 
 ``` javascript
 var Router = Backbone.Router.extend({
@@ -44,7 +44,7 @@ var Router = Backbone.Router.extend({
 
 Any method that exists on a router can be called using `router.go()`, passing
 the name of the method as the first argument. If the method has an associated 
-route, the browser URL will change accordingly. Pass any route parameters
+route, the browser URL will update accordingly. Pass any route parameters
 or query parameters in a hash as the second argument and the parameters will be
 parsed and put in their respective places in the URL. For instance, we could
 navigate to the example route above, like so:
@@ -55,7 +55,7 @@ router.go('contact', { id: '123', action: 'edit' });
 
 The `router.go()` method acts similarly to `router.navigate()` and any options
 applicable to it may also be passed in a hash as the third argument. For
-example, we could call the `contact` method and update its URL but NOT create
+example, we could call the `contact` method and update its URL but not create
 an entry in the browser's history with:
 
 ``` javascript
