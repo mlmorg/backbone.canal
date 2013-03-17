@@ -3,7 +3,8 @@ describe('backbone.canal.js', function () {
   var router;
   var Router = Backbone.Router.extend({
     routes: {
-      'search/:type': 'search'
+      'search/:type': 'search',
+      'search': 'search'
     },
     search: sinon.spy()
   });
@@ -41,7 +42,7 @@ describe('backbone.canal.js', function () {
     var query = { q: 'joe' };
 
     before(function () {
-      router.navigate('search/' + type + '?' + $.param(query), true);
+      router.navigate('search' + '?' + $.param(query), true);
     });
 
     after(function () {
