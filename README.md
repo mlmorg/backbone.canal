@@ -18,9 +18,12 @@ Include the distribution file immediately following Backbone:
 
 ### Route parameters
 
-Named parameters in the route are sent within a hash as the first argument
-to the associated route method. For instance, in the following example the `id`
-route parameter is accessed from the `params` hash:
+Both named route parameters and any passed query paramters are sent in a hash
+as the first argument to the associated route method. Any defined route can be
+called with query parameters irrespective of if they have a trailing `splat`
+or not. For example, using the router defined below and a URL of 
+`contact/123?action=edit`, both the `id` parameter and `action` parameter can
+be accessed from the `params` hash:
 
 ``` javascript
 var Router = Backbone.Router.extend({
@@ -31,29 +34,7 @@ var Router = Backbone.Router.extend({
 
   contact: function (params) {
     var id = params.id;
-  }
-
-});
-```
-
-### Query parameters
-
-Any query parameters appended to a URL are hashed and included as the second
-argument to the associated route method. Any defined routes can be called with
-query paramters irrespective of if they have a trailing `splat` or not. For
-example, the same route as above could be navigated to with `?action=edit`
-allowing the `action` parameter to be accessed from the `query` hash:
-
-``` javascript
-var Router = Backbone.Router.extend({
-
-  routes: {
-    'contact/:id': 'contact'
-  },
-
-  contact: function (params, query) {
-    var id = params.id;
-    var action = query.action;
+    var action = params.action;
   }
 
 });
@@ -64,12 +45,20 @@ var Router = Backbone.Router.extend({
 Any method that exists on a router can be called using `router.go()`, passing
 the name of the method as the first argument. If the method has an associated 
 URL route, the browser URL will change accordingly. Pass any route parameters
-or query paramters in a hash as the second argument to the method and the
-parameters will be parsed and placed in their respective parts. We could
+or query parameters in a hash as the second argument and the parameters will be
+parsed and put in their respective places in the URL. For instance, we could
 navigate to the example route above, like so:
 
 ``` javascript
 router.go('contact', { id: '123', action: 'edit' });
+```
+
+The `router.go()` method acts similarly to `router.navigate()` and any options
+applicable to it may also be passed in a hash as the third argument to the
+`go` method:
+
+``` javascript
+router.go('contact', { id: '123' }, { replace: true });
 ```
 
 ## Testing Environment
