@@ -50,10 +50,18 @@ The `contact` method would then receive two arguments, a `params` hash
 query parameters sent alongside the request):
 
 ``` javascript
-contact: function (params, query) {
-  var id = params.id;
-  var action = query.action;
-}
+var Router = Backbone.Router.extend({
+
+  routes: {
+    'contact/:id': 'contact'
+  },
+
+  contact: function (params, query) {
+    var id = params.id;
+    var action = query.action;
+  }
+
+});
 ```
 
 ## Testing Environment
