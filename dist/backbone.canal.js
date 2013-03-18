@@ -170,8 +170,10 @@
       var namedParams = _extractParameters(route, fragment);
       if (namedParams) {
         _.each(namedParams, function (param, i) {
-          // Set names according to the names array
-          params[names[i]] = param;
+          // Set the parameter key to the name in the names array or, if no
+          // name is in the array, the index value
+          var key = names[i] || i;
+          params[key] = param;
         });
       }
 
