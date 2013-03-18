@@ -82,6 +82,8 @@ route with:
 
 ## Configuration
 
+### Query Parameters
+
 By default, Backbone.Canal comes preloaded with very minimal query parameter
 parsing/serializing. If you find that you need more robust versions, you can
 configure them yourself with:
@@ -97,6 +99,16 @@ Backbone.Canal.configure({
     return $.deparam(string);
   }
 
+});
+```
+
+### Element Routing
+
+If you'd like to disable element routing, set the configuration item to `false`:
+
+``` javascript
+Backbone.Canal.configure({
+  elementRouting: false
 });
 ```
 
