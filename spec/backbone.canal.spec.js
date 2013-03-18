@@ -55,4 +55,15 @@ describe('backbone.canal.js', function () {
 
   });
 
+  describe('router.url()', function () {
+
+    var type = 'name';
+    var q = 'joe';
+
+    it('should return a URL for the route/params', function () {
+      expect(router.url('search', { type: type, q: 'joe' })).to.eql('search/' + type + '?q=' + q);
+    });
+
+  });
+
 });
