@@ -16,7 +16,7 @@ Include the distribution file immediately following Backbone:
 
 ## Usage
 
-### Route parameters
+### Route Parameters
 
 Both named route parameters and any passed query paramters are sent in a hash
 as the first argument to the associated route method. Any defined route can be
@@ -62,11 +62,22 @@ an entry in the browser's history with:
 router.go('contact', { id: '123', action: 'edit' }, { replace: true });
 ```
 
-If you would just like to get the URL of a named route, simply call
-`router.url()`:
+If you would just like to get the URL of a named route, simply call:
 
 ``` javascript
 router.url('contact', { id: '123', action: 'edit' });
+```
+
+### Element Routing
+
+Any element on the page can navigate to a specific route on-click if it has
+a `data-route` attribute specifying the associated route method. Parameters
+are passed by setting attributes for each parameter name, leading with
+`data-route-`. For example, we could set a list element to link to the above
+route with:
+
+``` html
+<li data-route="contact" data-route-id="123" data-route-action="edit">Joe Strummer</li>
 ```
 
 ## Testing Environment
