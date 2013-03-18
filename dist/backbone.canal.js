@@ -56,7 +56,6 @@
       }
 
     }
-
   };
 
   // Extend Backbone.Router
@@ -92,9 +91,9 @@
       }
 
       // Add the handler to Backbone.History
-      Backbone.history.route(route, _.bind(function (fragment, qs) {
+      Backbone.history.route(route, _.bind(function (fragment, query) {
         // Extract route parameters and query parameters
-        var params = this._extractParameters(route, names, fragment, qs);
+        var params = this._extractParameters(route, names, fragment, query);
 
         // Create argument array
         var args = [params];
@@ -143,13 +142,28 @@
       }
     },
 
-    _extractParameters: function (route, names, fragment, qs) {
+    go: function (name, params, options) {
+      // Get the associated route URL
+      var url = this.url(name, params);
+
+      // If a URL exists, navigate to it
+      if (typeof url !== 'undefined') {
+        return this.navigate(url, _.extend({ trigger: true }, options));
+      }
+
+      // Otherwise, call the router method, if it exists
+      else if (this[name]) {
+        return this[name](name, params);
+      }
+    },
+
+    _extractParameters: function (route, names, fragment, query) {
       // Default to empty hash
       var params = {};
 
       // Parse query parameters and merge onto params hash
-      if (qs) {
-        _.extend(params, Canal.options.deparam(qs.substring(1)));
+      if (query) {
+        _.extend(params, Canal.options.deparam(query.substring(1)));
       }
 
       // Extract named/splat parameters and merge onto params hash
@@ -175,16 +189,16 @@
       var fragment = this.fragment = this.getFragment(fragmentOverride);
 
       // Extract and remove query string from fragment
-      var qs = fragment.match(queryStringPattern) || '';
-      if (qs) {
-        qs = qs[0];
-        fragment = fragment.replace(qs, '');
+      var query = fragment.match(queryStringPattern) || '';
+      if (query) {
+        query = query[0];
+        fragment = fragment.replace(query, '');
       }
 
       // If a handler matches, run callback
       var matched = _.any(this.handlers, function (handler) {
         if (handler.route.test(fragment)) {
-          handler.callback(fragment, qs);
+          handler.callback(fragment, query);
           return true;
         }
       });
