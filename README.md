@@ -80,6 +80,26 @@ route with:
 <li data-route="contact" data-route-id="123" data-route-action="edit">Joe Strummer</li>
 ```
 
+## Configuration
+
+By default, Backbone.Canal comes preloaded with very minimal query parameter
+parsing/serializing. If you find that you need more robust versions, you can
+configure them yourself with:
+
+``` javascript
+Backbone.Canal.configure({
+
+  param: function (obj) {
+    return $.param(obj);
+  },
+
+  deparam: function (string) {
+    return $.deparam(string);
+  }
+
+});
+```
+
 ## Testing Environment
 
 Install [Node.js](http://nodejs.org/). Make sure you've installed 
