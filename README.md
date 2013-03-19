@@ -68,16 +68,53 @@ If you would just like to get the URL of a named route, simply call:
 router.url('contact', { id: '123', action: 'edit' });
 ```
 
-### Element Routing
+### Before, After & Around Filters
 
-Any element on the page can navigate to a specific route on-click if it has
-a `data-route` attribute specifying the associated route method. Parameters
-are passed by setting attributes for each parameter name, leading with
-`data-route-`. For example, we could set a list element to link to the above
-route with:
+Filters can be called before, after and around named routes by using the
+`before\_filters`, `after\_filters` and `around\_filters` hashes mapping a 
+filter method name to a hash of options. For options, `only` specifies the
+named route (or array of names) that the filter should be run for; `except`
+naturally corresponds to all routes except for the route (or routes) specified.
 
-``` html
-<li data-route="contact" data-route-id="123" data-route-action="edit">Joe Strummer</li>
+``` javascript
+var Router = Backbone.Router.extend({
+
+  routes: {
+    '': 'home',
+    'contact/:id': 'contact'
+    'search': 'search'
+  },
+
+  before_filters: {
+    'myBeforeFilter': { only: 'contact' }
+  },
+
+  around_filters: {
+    'myAroundFilter: { except: ['home', 'contact'] }
+  },
+
+  ...
+```
+
+Before and after filter functions are called with the route name as the first 
+argument and the hash of parameters as the second argument. The first argument
+of an around filter, however, is a `yield` function that calls the route 
+method. To continue from the last example:
+
+``` javascript
+  ...
+  
+  myBeforeFilter: function (route, params) {
+    // do something
+  },
+
+  myAroundFilter: function (yield, route, params) {
+    // do something
+    yield();
+    // do something else
+  },
+
+  ...
 ```
 
 ## Configuration
@@ -99,16 +136,6 @@ Backbone.Canal.configure({
     return $.deparam(string);
   }
 
-});
-```
-
-### Element Routing
-
-If you'd like to disable element routing, set the configuration item to `false`:
-
-``` javascript
-Backbone.Canal.configure({
-  elementRouting: false
 });
 ```
 
