@@ -153,7 +153,6 @@ Then, install the development dependencies:
 
 ```
 npm install
-bower install
 ```
 Linting, running the tests, and creating the distribution files is accomplished
 with:
