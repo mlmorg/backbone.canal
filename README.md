@@ -71,7 +71,7 @@ router.url('contact', { id: '123', action: 'edit' });
 ### Before, After & Around Filters
 
 Filters can be called before, after and around named routes by using the
-`before\_filters`, `after\_filters` and `around\_filters` hashes mapping a 
+`before_filters`, `after_filters` and `around_filters` hashes mapping a 
 filter method name to a hash of options. For options, `only` specifies the
 named route (or array of names) that the filter should be run for; `except`
 naturally corresponds to all routes except for the route (or routes) specified.
@@ -90,7 +90,7 @@ var Router = Backbone.Router.extend({
   },
 
   around_filters: {
-    'myAroundFilter: { except: ['home', 'contact'] }
+    'myAroundFilter': { except: ['home', 'contact'] }
   },
 
   ...
