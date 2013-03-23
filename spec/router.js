@@ -215,6 +215,27 @@ describe('Backbone.Router', function () {
 
     });
 
+    describe('when passed options', function () {
+
+      var navigate;
+      var options = { replace: true };
+
+      before(function () {
+        navigate = sinon.stub(router, 'navigate');
+        router.route('', 'home');
+        router.go('home', null, options);
+      });
+
+      after(function () {
+        navigate.reset();
+      });
+
+      it('should pass the options hash to the navigate method', function () {
+        navigate.args[0][1].should.equal(options);
+      });
+
+    });
+
   });
 
 });
