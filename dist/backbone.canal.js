@@ -36,13 +36,12 @@
         var items = string.replace(plusPattern, ' ').split('&');
 
         // Build hash
-        var obj = {};
-        _.each(items, function (params) {
-          var param = params.split('=');
-          obj[param[0]] = decodeURIComponent(param[1]);
+        return _.tap({}, function (obj) {
+          _.each(items, function (params) {
+            var param = params.split('=');
+            obj[param[0]] = decodeURIComponent(param[1]);
+          });
         });
-
-        return obj;
       },
 
       param: function (obj) {
