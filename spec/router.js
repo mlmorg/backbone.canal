@@ -2,7 +2,7 @@ describe('Backbone.Router', function () {
 
   var router, location;
 
-  before(function () {
+  beforeEach(function () {
     location = new Location('http://www.example.com');
     Backbone.history = _.extend(new Backbone.History, { location: location });
     router = new Backbone.Router();
@@ -14,14 +14,13 @@ describe('Backbone.Router', function () {
 
       var search = sinon.spy();
 
-      before(function () {
+      beforeEach(function () {
         router.route('search/:type(/my:optional)/:other', 'search', search);
         location.replace('http://www.example.com/search/name/foo?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.history.stop();
       });
 
@@ -45,14 +44,13 @@ describe('Backbone.Router', function () {
 
       var search = sinon.spy();
 
-      before(function () {
+      beforeEach(function () {
         router.route('search*splat', 'search', search);
         location.replace('http://www.example.com/search/name/other?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.history.stop();
       });
 
@@ -74,14 +72,13 @@ describe('Backbone.Router', function () {
 
       var search = sinon.spy();
 
-      before(function () {
+      beforeEach(function () {
         router.route('search', 'search', search);
         location.replace('http://www.example.com/search?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.history.stop();
       });
 
@@ -110,12 +107,8 @@ describe('Backbone.Router', function () {
 
     describe('when a route has named, optional and splat parameters', function () {
 
-      before(function () {
+      beforeEach(function () {
         router.route('search/:type(/my:optional)/*other', 'search');
-      });
-
-      after(function () {
-        router._routes = {};
       });
 
       it('should return url with correct associations replaced with params', function () {
@@ -155,13 +148,9 @@ describe('Backbone.Router', function () {
         search: sinon.spy()
       });
 
-      before(function () {
+      beforeEach(function () {
         router = new Router();
         router.go('search', params);
-      });
-
-      after(function () {
-        router = new Backbone.Router();
       });
 
       it('should call the method', function () {
@@ -179,14 +168,13 @@ describe('Backbone.Router', function () {
       var params = { type: 'name', q: 'Joe' };
       var search = sinon.spy();
 
-      before(function () {
+      beforeEach(function () {
         router.route('search/:type', 'search', search);
         Backbone.history.start({ silent: true, pushState: false });
         router.go('search', params);
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.history.stop();
       });
 
@@ -208,14 +196,14 @@ describe('Backbone.Router', function () {
 
       var home = sinon.spy();
 
-      before(function () {
+      beforeEach(function () {
+        location.replace('http://www.example.com/#another');
         router.route('', 'home', home);
         Backbone.history.start({ silent: true, pushState: false });
         router.go('home');
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.history.stop();
       });
 
@@ -230,14 +218,13 @@ describe('Backbone.Router', function () {
       var navigate;
       var options = { replace: true };
 
-      before(function () {
+      beforeEach(function () {
         navigate = sinon.stub(router, 'navigate');
         router.route('', 'home');
         router.go('home', null, options);
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         navigate.reset();
       });
 
