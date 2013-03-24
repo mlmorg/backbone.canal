@@ -169,7 +169,7 @@ describe('Backbone.Router', function () {
       });
 
       it('should pass the params hash', function () {
-        search.args[0][0].should.equal(params);
+        router.search.args[0][0].should.equal(params);
       });
 
     });
