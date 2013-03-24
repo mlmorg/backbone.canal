@@ -142,7 +142,8 @@ describe('Backbone.Router', function () {
     describe('when no method or matching route exists', function () {
 
       it('should throw an error', function () {
-        expect(router.go('nonexistant')).to.throw();
+        var fn = function () { router.go('nonexistant'); };
+        expect(fn).to.throw(Error);
       });
 
     });
