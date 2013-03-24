@@ -2,7 +2,7 @@ describe('Backbone.Canal', function () {
 
   var router, location;
 
-  before(function () {
+  beforeEach(function () {
     location = new Location('http://www.example.com');
     Backbone.history = _.extend(new Backbone.History, { location: location });
     router = new Backbone.Router();
@@ -17,13 +17,12 @@ describe('Backbone.Canal', function () {
         return 'name=' + obj.name + '_strummer';
       };
 
-      before(function () {
+      beforeEach(function () {
         router.route('search', 'search');
         Backbone.Canal.configure({ param: param });
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.Canal.configure({ param: _param });
       });
 
@@ -36,22 +35,22 @@ describe('Backbone.Canal', function () {
 
     describe('when altering the deparam method', function () {
 
-      var search = sinon.spy();
+      var search;
       var _deparam = Backbone.Canal.options.deparam;
       var deparam = function (string) {
         var split = string.split('=');
         return { n: split[1] };
       };
 
-      before(function () {
+      beforeEach(function () {
+        search = sinon.spy();
         router.route('search', 'search', search);
         Backbone.Canal.configure({ deparam: deparam });
         location.replace('http://www.example.com/search?name=joe_strummer');
         Backbone.history.start({ pushState: true });
       });
 
-      after(function () {
-        router._routes = {};
+      afterEach(function () {
         Backbone.Canal.configure({ deparam: _deparam });
         Backbone.history.stop();
       });

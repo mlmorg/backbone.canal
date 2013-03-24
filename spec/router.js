@@ -8,13 +8,14 @@ describe('Backbone.Router', function () {
     router = new Backbone.Router();
   });
 
-  describe('@window.location change', function () {
+  describe('on window.location change', function () {
 
     describe('when a route has named (and optional) parameters', function () {
 
-      var search = sinon.spy();
+      var search;
 
       beforeEach(function () {
+        search = sinon.spy();
         router.route('search/:type(/my:optional)/:other', 'search', search);
         location.replace('http://www.example.com/search/name/foo?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
@@ -42,9 +43,10 @@ describe('Backbone.Router', function () {
 
     describe('when a route has a trailing splat', function () {
 
-      var search = sinon.spy();
+      var search;
 
       beforeEach(function () {
+        search = sinon.spy();
         router.route('search*splat', 'search', search);
         location.replace('http://www.example.com/search/name/other?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
@@ -70,9 +72,10 @@ describe('Backbone.Router', function () {
 
     describe('when a route has no named/splat parameters', function () {
 
-      var search = sinon.spy();
+      var search;
 
       beforeEach(function () {
+        search = sinon.spy();
         router.route('search', 'search', search);
         location.replace('http://www.example.com/search?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
@@ -143,12 +146,11 @@ describe('Backbone.Router', function () {
 
     describe('when a method exists but no matching route', function () {
 
-      var params = { name: 'Joe' };
-      var Router = Backbone.Router.extend({
-        search: sinon.spy()
-      });
+      var params, Router;
 
       beforeEach(function () {
+        params = { name: 'joe' };
+        Router = Backbone.Router.extend({ search: sinon.spy() });
         router = new Router();
         router.go('search', params);
       });
@@ -165,10 +167,11 @@ describe('Backbone.Router', function () {
 
     describe('when a method and matching route exist', function () {
 
-      var params = { type: 'name', q: 'Joe' };
-      var search = sinon.spy();
+      var params, search;
 
       beforeEach(function () {
+        params = { type: 'name', q: 'Joe' };
+        search = sinon.spy();
         router.route('search/:type', 'search', search);
         Backbone.history.start({ silent: true, pushState: false });
         router.go('search', params);
@@ -194,9 +197,10 @@ describe('Backbone.Router', function () {
 
     describe('when the matching route is an empty string', function () {
 
-      var home = sinon.spy();
+      var home;
 
       beforeEach(function () {
+        home = sinon.spy();
         location.replace('http://www.example.com/#another');
         router.route('', 'home', home);
         Backbone.history.start({ silent: true, pushState: false });
@@ -215,10 +219,10 @@ describe('Backbone.Router', function () {
 
     describe('when passed options', function () {
 
-      var navigate;
-      var options = { trigger: false, replace: true };
+      var navigate, options;
 
       beforeEach(function () {
+        options = { trigger: false, replace: true };
         navigate = sinon.stub(router, 'navigate');
         router.route('', 'home');
         router.go('home', null, options);
