@@ -240,4 +240,64 @@ describe('Backbone.Router', function () {
 
   });
 
+  describe('filters', function () {
+
+    var Router;
+
+    beforeEach(function () {
+      Router = Backbone.Router.extend({});
+    });
+
+    describe('when a before filter is set with no options', function () {
+
+      var beforeFilterCalled;
+      var correct;
+      var search = function () {
+        if (beforeFilterCalled) {
+          correct = true;
+        }
+      };
+      var beforeFilter = function () {
+        beforeFilterCalled = true;
+      };
+
+      beforeEach(function () {
+        beforeFilter = sinon.spy(beforeFilter);
+        Router.prototype.beforeFilter = beforeFilter;
+        Router.prototype.before = { 'beforeFilter': {} };
+        router = new Router();
+        search = sinon.spy(search);
+        router.route('search/:type', 'search', search);
+        location.replace('http://www.example.com/search/name');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should call the before filter', function () {
+        beforeFilter.calledOnce.should.be.true;
+      });
+
+      it('should call the route method', function () {
+        search.calledOnce.should.be.true;
+      });
+
+      it('should call the before filter before the route method', function () {
+        correct.should.be.true;
+      });
+
+      it('should pass the route name to the before filter', function () {
+        beforeFilter.args[0][0].should.equal('search');
+      });
+
+      it('should pass any parameters as the second argument of filter', function () {
+        beforeFilter.args[0][1].should.eql({ type: 'name' });
+      });
+
+    });
+
+  });
+
 });
