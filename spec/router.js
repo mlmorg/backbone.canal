@@ -15,12 +15,13 @@ describe('Backbone.Router', function () {
       var search = sinon.spy();
 
       before(function () {
-        router.route('search/:type(/:optional)/:other', 'search', search);
+        router.route('search/:type(/my:optional)/:other', 'search', search);
         location.replace('http://www.example.com/search/name/foo?q=Joe Strummer');
         Backbone.history.start({ pushState: true });
       });
 
       after(function () {
+        router._routes = {};
         Backbone.history.stop();
       });
 
@@ -51,6 +52,7 @@ describe('Backbone.Router', function () {
       });
 
       after(function () {
+        router._routes = {};
         Backbone.history.stop();
       });
 
@@ -79,6 +81,7 @@ describe('Backbone.Router', function () {
       });
 
       after(function () {
+        router._routes = {};
         Backbone.history.stop();
       });
 
@@ -108,17 +111,21 @@ describe('Backbone.Router', function () {
     describe('when a route has named, optional and splat parameters', function () {
 
       before(function () {
-        router.route('search/:type(/:optional)/*other', 'search');
+        router.route('search/:type(/my:optional)/*other', 'search');
+      });
+
+      after(function () {
+        router._routes = {};
       });
 
       it('should return url with correct associations replaced with params', function () {
         var url = router.url('search', { type: 'name', optional: 'foo', other: 'bar' });
-        url.should.equal('search/name/foo/bar');
+        url.should.equal('search/name/myfoo/bar');
       });
 
       it('should return url with any other params added as query parameters', function () {
         var url = router.url('search', { type: 'name', optional: 'foo', other: 'bar', foo: 'test' });
-        url.should.equal('search/name/foo/bar?foo=test');
+        url.should.equal('search/name/myfoo/bar?foo=test');
       });
 
       it('should correctly handle optional paramters', function () {
@@ -178,6 +185,7 @@ describe('Backbone.Router', function () {
       });
 
       after(function () {
+        router._routes = {};
         Backbone.history.stop();
       });
 
@@ -206,6 +214,7 @@ describe('Backbone.Router', function () {
       });
 
       after(function () {
+        router._routes = {};
         Backbone.history.stop();
       });
 
@@ -227,6 +236,7 @@ describe('Backbone.Router', function () {
       });
 
       after(function () {
+        router._routes = {};
         navigate.reset();
       });
 

@@ -23,6 +23,7 @@ describe('Backbone.Canal', function () {
       });
 
       after(function () {
+        router._routes = {};
         Backbone.Canal.configure({ param: _param });
       });
 
@@ -50,6 +51,7 @@ describe('Backbone.Canal', function () {
       });
 
       after(function () {
+        router._routes = {};
         Backbone.Canal.configure({ deparam: _deparam });
         Backbone.history.stop();
       });
