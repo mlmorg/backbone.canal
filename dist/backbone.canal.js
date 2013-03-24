@@ -14,12 +14,15 @@
 
   // References for overridden methods
   var _extractParameters = Backbone.Router.prototype._extractParameters;
+  var _getFragment = Backbone.History.prototype.getFragment;
 
   // Useful regex patters
-  var paramNamesPattern = /[\:\*]\w+/g;
+  var paramNamesPattern = /(\(.*?)?[:\*]\w+\)?/g;
+  var optionalParamPattern = /\(.*?:(\w+)\)/;
   var queryStringPattern = /\?.*$/;
   var plusPattern = /\+/g;
   var r20Pattern = /%20/g;
+  var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
 
   // Backbone.Canal
   // --------------
@@ -62,9 +65,17 @@
   _.extend(Backbone.Router.prototype, {
 
     route: function (route, name, callback) {
-      // Get route parameter names
+      // Get route parameter names, storing which names are optional
+      var optionals = [];
       var names = _.map(route.match(paramNamesPattern), function (name) {
-        return name.substring(1);
+        var optional = name.match(optionalParamPattern);
+        if (optional) {
+          name = optional[1];
+          optionals.push(name);
+        } else {
+          name = name.substring(1);
+        }
+        return name;
       });
 
       if (!_.isRegExp(route)) {
@@ -72,7 +83,11 @@
         if (name) {
           this._routes = this._routes || {};
           this._routes[name] = this._routes[name] || [];
-          this._routes[name].push({ url: route, names: names });
+          this._routes[name].push({
+            url: route,
+            names: names,
+            optionals: optionals
+          });
 
           // Sort the route array by numer of parameters
           this._routes[name] = _.sortBy(this._routes[name], function (route) {
@@ -112,32 +127,57 @@
     },
 
     url: function (name, params) {
-      var routes = this._routes[name];
-      params = _.clone(params);
-
+      var routes = this._routes ? this._routes[name] : undefined;
       if (routes) {
+        params = _.clone(params) || {};
+
         // Determine the best match for this route with the passed params
         var keys = _.keys(params);
         var route = _.find(routes, function (route) {
-          var diff = _.difference(route.names, keys);
+          var names = _.difference(route.names, route.optionals);
+          var diff = _.difference(names, keys);
           return !diff.length;
         });
 
-        // Build url, adding the parameters into the named/splat parts
-        var url = route.url;
-        _.each(route.names, function (name) {
-          var regex = new RegExp('(\\(\\/)?[:\\*]' + name + '\\)?');
-          url = url.replace(regex, params[name]);
-          delete params[name];
-        });
+        if (route) {
+          // Build url, adding the parameters into the named/splat parts
+          var url = route.url;
+          _.each(route.names, function (name) {
+            // Find named/splat parts that match the passed paramter
+            var paramRegExp = new RegExp('(\\(.*?)?[:\\*]' + name + '\\)?');
+            var match = url.match(paramRegExp);
+            if (match) {
+              var replaceWith = params[name];
 
-        // Add query parameters to url
-        var query = Canal.options.param(params);
-        if (query) {
-          url += '?' + query;
+              // Optional parameters that don't exist on the params hash should
+              // be removed
+              if (!_.isString(replaceWith)) {
+                replaceWith = '';
+              }
+
+              else {
+                // Add any leading characters stripped out of optional parts
+                if (match[1]) {
+                  replaceWith = match[1].substring(1) + replaceWith;
+                }
+              }
+
+              // Replace url parts with the paramters
+              url = url.replace(match[0], replaceWith);
+
+              // Remove this parameter from the hash
+              delete params[name];
+            }
+          });
+
+          // Add any extra items as query parameters to url
+          var query = Canal.options.param(params);
+          if (query) {
+            url += '?' + query;
+          }
+
+          return url;
         }
-
-        return url;
       }
     },
 
@@ -146,13 +186,18 @@
       var url = this.url(name, params);
 
       // If a URL exists, navigate to it
-      if (typeof url !== 'undefined') {
+      if (_.isString(url)) {
         return this.navigate(url, _.extend({ trigger: true }, options));
       }
 
       // Otherwise, call the router method, if it exists
       else if (this[name]) {
-        return this[name](name, params);
+        return this[name](params);
+      }
+
+      // When no method or matching route exists, throw an error
+      else {
+        throw new Error('No method or matching route exists');
       }
     },
 
@@ -166,7 +211,7 @@
       }
 
       // Extract named/splat parameters and merge onto params hash
-      var namedParams = _extractParameters(route, fragment);
+      var namedParams = _extractParameters.call(this, route, fragment);
       if (namedParams) {
         _.each(namedParams, function (param, i) {
           // Set the parameter key to the name in the names array or, if no
@@ -184,6 +229,21 @@
   // Extend Backbone.History
   // -----------------------
   _.extend(Backbone.History.prototype, {
+
+    getFragment: function (fragment, forcePushState) {
+      // Get fragment from original method
+      fragment = _getFragment.call(this, fragment, forcePushState);
+
+      // Add any query parameters
+      if (this._hasPushState || !this._wantsHashChange || forcePushState) {
+        var query = this.location.search;
+        var queryRegExp = query.replace(escapeRegExp, '\\$&');
+        if (!fragment.match(queryRegExp)) {
+          fragment += query;
+        }
+      }
+      return fragment;
+    },
 
     loadUrl: function (fragmentOverride) {
       // Get fragment
