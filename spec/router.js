@@ -216,7 +216,7 @@ describe('Backbone.Router', function () {
     describe('when passed options', function () {
 
       var navigate;
-      var options = { replace: true };
+      var options = { trigger: false, replace: true };
 
       beforeEach(function () {
         navigate = sinon.stub(router, 'navigate');
@@ -229,7 +229,7 @@ describe('Backbone.Router', function () {
       });
 
       it('should pass the options hash to the navigate method', function () {
-        navigate.args[0][1].should.equal(options);
+        navigate.args[0][1].should.eql(options);
       });
 
     });
