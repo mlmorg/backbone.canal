@@ -20,16 +20,6 @@ module.exports = function (grunt) {
       }
     },
 
-    uglify: {
-      options: {
-        banner: '<%= banner %>'
-      },
-      dist: {
-        src: '<%= concat.dist.dest %>',
-        dest: '<%= pkg.name %>.min.js'
-      }
-    },
-
     jshint: {
       src: {
         options: {
@@ -52,9 +42,8 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-mocha');
 
-  grunt.registerTask('default', ['jshint', 'mocha', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'mocha', 'concat']);
 
 };
