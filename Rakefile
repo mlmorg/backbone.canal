@@ -1,18 +1,10 @@
 require 'json'
 pkg = JSON.parse(File.read(File.expand_path('../package.json', __FILE__)));
 
-task :release => [:lint, :test, :build, :push, :tag]
-
-task :lint do
-  abort unless system "grunt jshint"
-end
-
-task :test do
-  abort unless system "grunt mocha"
-end
+task :release => [:build, :push, :tag]
 
 task :build do
-  abort unless system "grunt concat"
+  abort unless system "grunt"
 end
 
 task :push do
