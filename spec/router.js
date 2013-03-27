@@ -240,6 +240,38 @@ describe('Backbone.Router', function () {
 
   });
 
+  describe('#navigate', function () {
+
+    describe('when the current URL query params and navigating to one with them', function () {
+
+      var pushed;
+
+      beforeEach(function () {
+        pushed = sinon.spy();
+        location.replace('http://www.example.com/search?q=test');
+        router.route('search', 'search');
+        Backbone.history = _.extend(new Backbone.History, {
+          location: location,
+          history: {
+            pushState: pushed
+          }
+        });
+        Backbone.history.start({ silent: true, pushState: true });
+        Backbone.history.navigate('search?q=joe');
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should replace all query parameters with the new ones', function () {
+        pushed.args[0][2].should.equal('/search?q=joe');
+      });
+
+    });
+
+  });
+
   describe('filters', function () {
 
     var Router;
