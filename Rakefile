@@ -1,7 +1,7 @@
 require 'json'
 pkg = JSON.parse(File.read(File.expand_path('../package.json', __FILE__)));
 
-task :release => [:lint, :test, :build, :tag]
+task :release => [:lint, :test, :build, :push, :tag]
 
 task :lint do
   abort unless system "grunt jshint"
@@ -13,6 +13,10 @@ end
 
 task :build do
   abort unless system "grunt concat"
+end
+
+task :push do
+  system "git push origin HEAD:stable"
 end
 
 task :tag do
