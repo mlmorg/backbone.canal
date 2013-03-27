@@ -4,7 +4,7 @@ module.exports = function (grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    banner: '/*!\n' +
+    banner: '/*\n' +
       ' * <%= pkg.name %> v<%= pkg.version %>\n' +
       ' * Copyright <%= grunt.template.today("yyyy") %>, <%= pkg.author %>\n' + 
       ' * <%= pkg.license %> license\n */\n',
@@ -15,8 +15,8 @@ module.exports = function (grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['lib/<%= pkg.name %>.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['<%= pkg.name %>.js'],
+        dest: '<%= pkg.name %>.js'
       }
     },
 
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: '<%= pkg.name %>.min.js'
       }
     },
 
@@ -35,7 +35,7 @@ module.exports = function (grunt) {
         options: {
           jshintrc: '.jshintrc'
         },
-        src: ['lib/**/*.js']
+        src: ['<%= pkg.name %>.js']
       }
     },
 
