@@ -12,8 +12,7 @@ task :test do
 end
 
 task :build do
-  system "grunt concat"
-  system "grunt uglify"
+  abort unless system "grunt concat"
 end
 
 task :tag do
