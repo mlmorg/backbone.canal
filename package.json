@@ -15,7 +15,8 @@
     "grunt-mocha": "~0.2.3"
   },
   "scripts": {
-    "install": "bower install"
+    "install": "bower install",
+    "test": "grunt jshint mocha"
   },
   "license": "MIT"
 }

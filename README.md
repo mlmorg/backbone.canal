@@ -154,8 +154,7 @@ Then, install the development dependencies:
 ```
 npm install
 ```
-Linting, running the tests, and creating the distribution files is accomplished
-with:
+Lint and run the tests with:
 ```
-grunt
+npm test
 ```
