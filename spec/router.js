@@ -411,6 +411,42 @@ describe('Backbone.Router', function () {
 
     });
 
+    describe('when a before filter returns false', function () {
+      
+      var anotherFilter;
+      var filter = function () {
+        return false;
+      };
+
+      beforeEach(function () {
+        filter = sinon.spy(filter);
+        anotherFilter = sinon.spy();
+        Router.prototype.filter = filter;
+        Router.prototype.anotherFilter = anotherFilter;
+        Router.prototype.before = { 'filter': {}, 'anotherFilter': {} };
+        router = new Router();
+        location.replace('http://www.example.com/search/name');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should call the filter', function () {
+        filter.calledOnce.should.be.true;
+      });
+
+      it('should not call any other later filters', function () {
+        anotherFilter.called.should.be.false;
+      });
+
+      it('should not call the associated route method', function () {
+        search.called.should.be.false;
+      });
+
+    });
+
     describe('when calling an after filter', function () {
 
       var routeCalled, correct;

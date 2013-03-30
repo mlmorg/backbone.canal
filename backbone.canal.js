@@ -89,9 +89,14 @@
         var args = [params];
 
         // Call any before filters
-        _.each(this._getFilters(name, 'before'), function (filter) {
-          filter.apply(this, [name].concat(args));
+        var halt = _.find(this._getFilters(name, 'before'), function (filter) {
+          return filter.apply(this, [name].concat(args)) === false
         });
+
+        // Stop if any before filters return false
+        if (halt) {
+          return;
+        }
 
         // Run the callback
         if (callback) {
