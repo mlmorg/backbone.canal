@@ -548,6 +548,10 @@ describe('Backbone.Router', function () {
           correct.should.be.true;
         });
 
+        it('should call the route method with the params hash', function () {
+          search.args[0][0].should.eql({ type: 'name' });
+        });
+
       });
 
     });
