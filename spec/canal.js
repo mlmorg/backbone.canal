@@ -28,7 +28,7 @@ describe('Backbone.Canal', function () {
 
       it('should use altered param method', function () {
         var url = router.url('search', { name: 'joe' });
-        url.should.equal('search?name=joe_strummer');
+        url.should.equal('/search?name=joe_strummer');
       });
 
     });

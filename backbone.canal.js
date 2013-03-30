@@ -251,8 +251,8 @@
       // Get route information
       route = this._routes[route];
 
-      // Start with the base
-      var url = route.url || '';
+      // Start with the base and leading slash
+      var url = '/' + (route.url || '');
 
       // Replace named/splat parts with their parameter equivalent
       _.each(route.parameters, function (name) {

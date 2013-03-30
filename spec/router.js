@@ -116,17 +116,17 @@ describe('Backbone.Router', function () {
 
       it('should return url with correct associations replaced with params', function () {
         var url = router.url('search', { type: 'name', optional: 'foo', other: 'bar' });
-        url.should.equal('search/name/myfoo/bar');
+        url.should.equal('/search/name/myfoo/bar');
       });
 
       it('should return url with any other params added as query parameters', function () {
         var url = router.url('search', { type: 'name', optional: 'foo', other: 'bar', foo: 'test' });
-        url.should.equal('search/name/myfoo/bar?foo=test');
+        url.should.equal('/search/name/myfoo/bar?foo=test');
       });
 
       it('should correctly handle optional paramters', function () {
         var url = router.url('search', { type: 'name', other: 'bar' });
-        url.should.equal('search/name/bar');
+        url.should.equal('/search/name/bar');
       });
 
     });
