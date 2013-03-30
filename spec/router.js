@@ -274,32 +274,34 @@ describe('Backbone.Router', function () {
 
   describe('filters', function () {
 
-    var Router;
+    var Router, home, search, contact, filter;
 
     beforeEach(function () {
-      Router = Backbone.Router.extend({});
+      home = sinon.spy();
+      search = sinon.spy();
+      contact = sinon.spy();
+      filter = sinon.spy();
+      Router = Backbone.Router.extend({
+        routes: {
+          '': 'home',
+          'search/:type': 'search',
+          'contact/:id': 'contact'
+        },
+        home: home,
+        search: search,
+        contact: contact,
+        filter: filter,
+      });
     });
 
-    describe('when a before filter is set with no options', function () {
-
-      var beforeFilterCalled;
-      var correct;
-      var search = function () {
-        if (beforeFilterCalled) {
-          correct = true;
-        }
-      };
-      var beforeFilter = function () {
-        beforeFilterCalled = true;
-      };
+    describe('with no options', function () {
 
       beforeEach(function () {
-        beforeFilter = sinon.spy(beforeFilter);
-        Router.prototype.beforeFilter = beforeFilter;
-        Router.prototype.before = { 'beforeFilter': {} };
+        Router.prototype.before = { 'filter': {} };
         router = new Router();
-        search = sinon.spy(search);
-        router.route('search/:type', 'search', search);
+        location.replace('http://www.example.com/');
+        Backbone.history.start({ pushState: true });
+        Backbone.history.stop();
         location.replace('http://www.example.com/search/name');
         Backbone.history.start({ pushState: true });
       });
@@ -308,12 +310,91 @@ describe('Backbone.Router', function () {
         Backbone.history.stop();
       });
 
-      it('should call the before filter', function () {
-        beforeFilter.calledOnce.should.be.true;
+      it('should call the filter for every route', function () {
+        filter.calledTwice.should.be.true;
       });
 
-      it('should call the route method', function () {
+      it('should call the associated route method', function () {
+        home.calledOnce.should.be.true;
         search.calledOnce.should.be.true;
+      });
+
+    });
+
+    describe('with the only option', function () {
+
+      beforeEach(function () {
+        Router.prototype.before = { 'filter': { only: 'search' } };
+        router = new Router();
+        location.replace('http://www.example.com/');
+        Backbone.history.start({ pushState: true });
+        Backbone.history.stop();
+        location.replace('http://www.example.com/search/name');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should call the filter only for routes specified', function () {
+        filter.calledOnce.should.be.true;
+      });
+
+      it('should call the associated route method', function () {
+        search.calledOnce.should.be.true;
+      });
+
+    });
+
+    describe('with the except option', function () {
+
+      beforeEach(function () {
+        Router.prototype.before = { 'filter': { except: ['home', 'search'] } };
+        router = new Router();
+        location.replace('http://www.example.com/');
+        Backbone.history.start({ pushState: true });
+        Backbone.history.stop();
+        location.replace('http://www.example.com/contact/123');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should call the filter only for routes not specified', function () {
+        filter.calledOnce.should.be.true;
+      });
+
+      it('should call the associated route method', function () {
+        contact.calledOnce.should.be.true;
+      });
+
+    });
+
+    describe('when calling a before filter', function () {
+
+      var filterCalled, correct;
+      var search = function () {
+        if (filterCalled) correct = true;
+      };
+      var filter = function () {
+        filterCalled = true;
+      };
+
+      beforeEach(function () {
+        filter = sinon.spy(filter);
+        Router.prototype.filter = filter;
+        Router.prototype.before = { 'filter': {} };
+        Router.prototype.search = search;
+        router = new Router();
+        location.replace('http://www.example.com/search/name');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
       });
 
       it('should call the before filter before the route method', function () {
@@ -321,11 +402,11 @@ describe('Backbone.Router', function () {
       });
 
       it('should pass the route name to the before filter', function () {
-        beforeFilter.args[0][0].should.equal('search');
+        filter.args[0][0].should.equal('search');
       });
 
       it('should pass any parameters as the second argument of filter', function () {
-        beforeFilter.args[0][1].should.eql({ type: 'name' });
+        filter.args[0][1].should.eql({ type: 'name' });
       });
 
     });
