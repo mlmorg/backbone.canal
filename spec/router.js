@@ -485,6 +485,73 @@ describe('Backbone.Router', function () {
 
     });
 
+    describe('when calling an around filter', function () {
+
+      var route, filterCalled, correct;
+      var filter = function (r) {
+        route = r;
+      };
+      var anotherFilter = function (r) {
+        filterCalled = true;
+        r();
+      };
+      var search = function () {
+        if (filterCalled) {
+          correct = true;
+        }
+      };
+
+      beforeEach(function () {
+        search = sinon.spy(search);
+        filter = sinon.spy(filter);
+        anotherFilter = sinon.spy(anotherFilter);
+        Router.prototype.filter = filter;
+        Router.prototype.anotherFilter = anotherFilter;
+        Router.prototype.around = { 'filter': {}, 'anotherFilter': {} };
+        Router.prototype.search = search;
+        router = new Router();
+        location.replace('http://www.example.com/search/name');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should call the around filter', function () {
+        filter.calledOnce.should.be.true;
+      });
+
+      it('should not call the route method immediately', function () {
+        search.calledOnce.should.be.false;
+      });
+
+      it('should not call any other around filters immediately', function () {
+        anotherFilter.calledOnce.should.be.false;
+      });
+
+      it('should pass the route name to the around filter', function () {
+        filter.args[0][1].should.equal('search');
+      });
+
+      it('should pass any parameters as the third argument of filter', function () {
+        filter.args[0][2].should.eql({ type: 'name' });
+      });
+
+      describe('when the route() function is called', function () {
+
+        beforeEach(function () {
+          route();
+        });
+
+        it('should call other around filters before the route method', function () {
+          correct.should.be.true;
+        });
+
+      });
+
+    });
+
   });
 
 });

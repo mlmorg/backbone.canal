@@ -99,19 +99,20 @@ var Router = Backbone.Router.extend({
 
 Before and after filter functions are called with the route name as the first 
 argument and the hash of parameters as the second argument. The first argument
-of an around filter, however, is a `yield` function that calls the route 
-method. To continue from the last example:
+of an around filter, however, is a `route()` function that calls the route 
+method, triggers the router events, and runs any after filters. To continue
+from the last example:
 
 ``` javascript
   ...
   
-  myBeforeFilter: function (route, params) {
+  myBeforeFilter: function (name, params) {
     // do something
   },
 
-  myAroundFilter: function (yield, route, params) {
+  myAroundFilter: function (route, name, params) {
     // do something
-    yield();
+    route();
     // do something else
   },
 
@@ -119,7 +120,7 @@ method. To continue from the last example:
 ```
 
 *Note: If a before filter returns `false` or an around filter never calls
-`yield`, the associated route method, router events, and any other declared
+`route()`, the associated route method, router events, and any other declared
 filters will never be called.*
 
 ## Configuration

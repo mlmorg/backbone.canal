@@ -98,20 +98,36 @@
           return;
         }
 
-        // Run the callback
-        if (callback) {
-          callback.apply(this, args);
-        }
+        // Create a function to call the route method and trigger events
+        var cb = _.bind(function () {
+          // Run the callback
+          if (callback) {
+            callback.apply(this, args);
+          }
 
-        // Trigger events
-        this.trigger.apply(this, ['route:' + name].concat(args));
-        this.trigger('route', name, args);
-        Backbone.history.trigger('route', this, name, args);
+          // Trigger events
+          this.trigger.apply(this, ['route:' + name].concat(args));
+          this.trigger('route', name, args);
+          Backbone.history.trigger('route', this, name, args);
 
-        // Call any after filters
-        _.each(this._getFilters(name, 'after'), function (filter) {
-          filter.apply(this, [name].concat(args));
-        });
+          // Call any after filters
+          _.each(this._getFilters(name, 'after'), function (filter) {
+            filter.apply(this, [name].concat(args));
+          });
+        }, this);
+
+        // Build the around filters around the function
+        // (reversed for correct order)
+        _.each(this._getFilters(name, 'around').reverse(), function (filter) {
+          var lastCb = cb;
+          cb = _.bind(function () {
+            filter.apply(this, [lastCb, name].concat(args));
+          }, this);
+        }, this);
+
+        // Call the function
+        cb();
+
       }, this));
 
       return this;
