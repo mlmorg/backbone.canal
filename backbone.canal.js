@@ -107,7 +107,7 @@
 
           // Trigger events
           this.trigger.apply(this, ['route:' + name].concat(args));
-          this.trigger('route', name, args);
+          this.trigger.apply(this, ['route', name].concat(args));
           Backbone.history.trigger('route', this, name, args);
 
           // Call any after filters
