@@ -98,6 +98,11 @@
           callback.apply(this, args);
         }
 
+        // Call any after filter
+        _.each(this._getFilters(name, 'after'), function (filter) {
+          filter.apply(this, [name].concat(args));
+        });
+
         // Trigger events
         this.trigger.apply(this, ['route:' + name].concat(args));
         this.trigger('route', name, args);

@@ -411,6 +411,44 @@ describe('Backbone.Router', function () {
 
     });
 
+    describe('when calling an after filter', function () {
+
+      var routeCalled, correct;
+      var search = function () {
+        routeCalled = true;
+      };
+      var filter = function () {
+        if (routeCalled) correct = true;
+      };
+
+      beforeEach(function () {
+        filter = sinon.spy(filter)
+        Router.prototype.filter = filter;
+        Router.prototype.after = { 'filter': {} };
+        Router.prototype.search = search;
+        router = new Router();
+        location.replace('http://www.example.com/search/name');
+        Backbone.history.start({ pushState: true });
+      });
+
+      afterEach(function () {
+        Backbone.history.stop();
+      });
+
+      it('should call the after filter after the route method', function () {
+        correct.should.be.true;
+      });
+
+      it('should pass the route name to the after filter', function () {
+        filter.args[0][0].should.equal('search');
+      });
+
+      it('should pass any parameters as the second argument of filter', function () {
+        filter.args[0][1].should.eql({ type: 'name' });
+      });
+
+    });
+
   });
 
 });
