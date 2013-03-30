@@ -117,6 +117,10 @@ method. To continue from the last example:
   ...
 ```
 
+*Note: If a before filter returns `false` or an around filter never calls
+`yield`, the associated route method, router events, and any other declared
+filters will never be called.*
+
 ## Configuration
 
 ### Query Parameters
