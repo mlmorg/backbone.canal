@@ -1,18 +1,11 @@
 # Backbone.Canal
 
-Backbone.Router add-on for named routes, query parameters, and other helpful tools
+Backbone Router add-on for named routing, parameter handling, and before, after
+& around filters.
 
-## Installation
-
-Include the distribution file immediately following Backbone:
-
-``` html
-<script src="jquery.js"></script>
-<script src="underscore.js"></script>
-<script src="backbone.js"></script>
-
-<script src="backbone.canal.js"></script>
-```
+Simply include the `backbone.canal.js` distribution file immediately following
+Backbone in your development environment. Its dependencies are Backbone and
+Underscore.
 
 ## Usage
 
@@ -40,7 +33,7 @@ var Router = Backbone.Router.extend({
 });
 ```
 
-### App Routing
+### Named Routing
 
 Any method that exists on a router can be called using `router.go()`, passing
 the name of the method as the first argument. If the method has an associated 

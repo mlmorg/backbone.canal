@@ -2,7 +2,7 @@
   "name": "backbone.canal",
   "version": "0.1.0",
   "author": "Matt Morgan (@mlmorg)",
-  "description": "Backbone.Router add-on for named routes, query parameters, and other helpful tools",
+  "description": "Backbone Router add-on for named routing, parameter handling, and before, after & around filters.",
   "homepage": "https://github.com/mlmorg/backbone.canal",
   "repository": {
     "type": "git",
