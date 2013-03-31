@@ -1,11 +1,9 @@
 # Backbone.Canal
 
 Backbone Router add-on for named routing, parameter handling, and before, after
-& around filters.
-
-Simply include the `backbone.canal.js` distribution file immediately following
-Backbone in your development environment. Its dependencies are Backbone and
-Underscore.
+& around filters. Its dependencies are Backbone and Underscore. Simply include
+the `backbone.canal.js` distribution file immediately following Backbone in
+your development environment. 
 
 ## Usage
 
