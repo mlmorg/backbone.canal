@@ -91,7 +91,7 @@
         // Call any before filters
         var halt = _.find(this._getFilters(name, 'before'), function (filter) {
           return filter.apply(this, [name].concat(args)) === false;
-        });
+        }, this);
 
         // Stop if any before filters return false
         if (halt) {
@@ -113,7 +113,7 @@
           // Call any after filters
           _.each(this._getFilters(name, 'after'), function (filter) {
             filter.apply(this, [name].concat(args));
-          });
+          }, this);
         }, this);
 
         // Build the around filters around the function
