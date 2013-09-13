@@ -33,6 +33,7 @@ module.exports = function (grunt) {
       all: {
         src: ['spec/index.html'],
         options: {
+          reporter: 'Spec',
           run: true
         }
       }
