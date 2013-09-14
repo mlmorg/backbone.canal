@@ -7,6 +7,27 @@ your development environment.
 
 ## Usage
 
+### Routes Function
+
+Backbone.Canal overrides the Backbone Router constructor in order to provide
+the ability to pass a function as the first argument to the router. This
+function is called with the router context so that you can simply create a
+`routes.js` file initializing your routes without the need to extend
+Backbone.Router. Then, methods can be called on specific controllers you create
+instead of all routes existing in a single router. For example:
+
+**routes.js**
+``` javascript
+return function () {
+  this.route('', 'home', home.show); // Call show on the home controller
+  this.route('/user/:id', 'user', user.show); // Call show on the user controller
+};
+```
+**main.js**
+``` javascript
+app.router = new Backbone.Router(routes);
+```
+
 ### Route Parameters
 
 Both named route parameters and any passed query paramters are sent in a hash

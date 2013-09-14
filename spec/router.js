@@ -8,6 +8,35 @@ describe('Backbone.Router', function () {
     router = new Backbone.Router();
   });
 
+  describe('passing function on instantiation', function () {
+
+    var routes, ctx, options, init;
+
+    beforeEach(function () {
+      options = {
+        foo: 'bar'
+      };
+      routes = function () {
+        ctx = this;
+      };
+      init = sinon.spy(Backbone.Router.prototype, 'initialize');
+      router = new Backbone.Router(routes, options);
+    });
+
+    afterEach(function () {
+      init.restore();
+    });
+    
+    it('should call function within context of router', function () {
+      expect(ctx).to.equal(router);
+    });
+
+    it('should call the initialize function with the options', function () {
+      expect(init.args[0][0]).to.equal(options);
+    });
+
+  });
+
   describe('on window.location change', function () {
 
     describe('when a route has named (and optional) parameters', function () {

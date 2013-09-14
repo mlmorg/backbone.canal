@@ -65,10 +65,22 @@
   // ----------------------
   Backbone.Router = Backbone.Router.extend({
 
-    constructor: function () {
+    constructor: function (fn, options) {
       this._routes = {};
       this._named = {};
-      return _constructor.apply(this, arguments);
+
+      if (!_.isFunction(fn)) {
+        options = fn;
+        fn = null;
+      }
+
+      _constructor.call(this, options);
+
+      if (fn) {
+        fn.call(this);
+      }
+
+      return this;
     },
 
     route: function (route, name, callback) {
