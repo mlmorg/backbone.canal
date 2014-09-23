@@ -328,7 +328,7 @@
       if (!_.isString(fragment)) {
         if (this._hasPushState || !this._wantsHashChange || forcePushState) {
           query = this.location.search;
-          queryRegExp = query.replace(escapeRegExp, '\\$&');
+          queryRegExp = decodeURIComponent(query).replace(escapeRegExp, '\\$&');
         }
       }
 
